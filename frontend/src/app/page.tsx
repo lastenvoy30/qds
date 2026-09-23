@@ -6,7 +6,6 @@ import { Area, AreaChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Too
 import {
   runAttackSimulation,
   runCleanSimulation,
-  runTeleportationSimulation,
 } from "@/lib/api";
 import {
   attackLabels,
@@ -293,7 +292,7 @@ export default function Dashboard() {
         <header className="flex h-14 items-center justify-between border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-md px-4 lg:px-6 sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"><Menu size={18} /></button>
-            <h1 className="text-sm font-medium">{view === "command" ? "Live Verification Dashboard" : view === "history" ? "Session Audit Logs" : "Documentation"}</h1>
+            <h1 className="text-lg font-medium">{view === "command" ? "Live Verification Dashboard" : view === "history" ? "Session Audit Logs" : "Documentation"}</h1>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400 border-r border-zinc-200 dark:border-zinc-800 pr-4">
@@ -385,12 +384,12 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 gap-2 mt-4">
                     <button
                       disabled={isRunning}
-                      onClick={executeTeleportation}
+                      onClick={() => execute("clean")}
                       className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-2 rounded-sm disabled:opacity-50 transition-colors"
                     >
                       {isRunning
-                        ? "Running Qiskit..."
-                        : "Run clean Teleportation"}
+                        ? "Running Clean Simulation..."
+                        : "Clean Simulation"}
                     </button>
                     <button disabled={isRunning} onClick={() => execute(selectedAttack)} className="bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-white text-white dark:text-zinc-900 text-sm font-semibold py-2 rounded-sm disabled:opacity-50 transition-colors">
                       {isRunning ? "Executing..." : "Inject Attack"}
@@ -474,7 +473,7 @@ function QDSFlow({
   useEffect(() => {
     setShowAllTeleportTrials(false);
   }, [teleportData]);
-  
+
   const BLUE = "#3b82f6";
   const RED = "#ef4444";
   const GREEN = "#10b981";
@@ -637,11 +636,11 @@ function QDSFlow({
 
         <div>
 
-          <h3 className="text-sm font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+          <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
             Quantum Teleportation
           </h3>
 
-          <p className="mt-1 text-sm font-mono uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+          <p className="mt-1 text-sm font-mono uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
             Alice → Quantum Channel → Bob
           </p>
 
@@ -759,7 +758,7 @@ function QDSFlow({
               y="21"
               textAnchor="middle"
               fill={showForgery ? RED : MUTED}
-              fontSize="9"
+              fontSize="13"
               fontFamily="monospace"
               letterSpacing="2"
             >
@@ -778,10 +777,10 @@ function QDSFlow({
 
             <text
               x="250"
-              y="62"
+              y="65"
               textAnchor="middle"
               fill={BLUE}
-              fontSize="8"
+              fontSize="12"
               fontFamily="monospace"
               letterSpacing="2"
             >

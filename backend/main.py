@@ -62,10 +62,27 @@ def _finalize(result: dict, attack_type: Optional[str], start_time: float) -> di
 def simulate_clean():
     start_time = time.perf_counter()
 
-    received_states = sign_message(DEMO_MESSAGE, DEMO_PRIVATE_KEY, NUM_COPIES)
-    result = evaluate_signature(DEMO_MESSAGE, DEMO_PRIVATE_KEY, received_states)
+    received_states = sign_message(
+        DEMO_MESSAGE,
+        DEMO_PRIVATE_KEY,
+        NUM_COPIES
+    )
 
-    return _finalize(result, None, start_time)
+    result = evaluate_signature(
+        DEMO_MESSAGE,
+        DEMO_PRIVATE_KEY,
+        received_states
+    )
+
+    teleportation = run_teleportation()
+
+    result["teleportation"] = teleportation
+
+    return _finalize(
+        result,
+        None,
+        start_time
+    )
 
 
 @app.post("/simulate/attack")
