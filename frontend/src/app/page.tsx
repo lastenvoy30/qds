@@ -571,7 +571,7 @@ function QDSFlow({
   // ---------------------------------------------------------
 
   let bottomMessage =
-    "Idle — Bell pair ready · Trials: 20";
+    "Bell pair ready (Trials: 20)";
 
   if (transmitting) {
 
