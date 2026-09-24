@@ -6,6 +6,7 @@ import { Area, AreaChart, CartesianGrid, ReferenceLine, ResponsiveContainer, Too
 import {
   runAttackSimulation,
   runCleanSimulation,
+  runTeleportationSimulation,
 } from "@/lib/api";
 import {
   attackLabels,
@@ -1198,6 +1199,7 @@ interface TeleportStepProps {
   active?: boolean;
   danger?: boolean;
   success?: boolean;
+  theme?: string;
 }
 
 function TeleportStep({
@@ -1207,6 +1209,7 @@ function TeleportStep({
   active = false,
   danger = false,
   success = false,
+  theme,
 }: TeleportStepProps) {
   const borderClass = danger
     ? "border-red-300 dark:border-red-900/60"
