@@ -164,3 +164,175 @@ Built for **Hacktivate 2.0**.
 ## License
 
 This project was built for hackathon purposes. Add a license of your choice if open-sourcing further.
+
+## Recent Updates & Additions
+
+The following functionality has been added to the existing QBIT implementation without changing the original architecture or detection approach.
+
+## Quantum Teleportation Telemetry
+
+QBIT now exposes detailed results from the actual Qiskit teleportation simulation instead of only returning the final QDS security verdict.
+
+Each teleportation run provides:
+
+Number of teleportation shots/trials
+Teleportation success rate
+Bell-state measurement results
+Measured classical bits
+Pauli correction applied by Bob
+Verification result
+Per-trial pass/fail status
+Backend execution latency
+
+Example teleportation response:
+``` bash
+{
+  "protocol": "quantum_teleportation",
+  "shots": 20,
+  "teleportation_success_rate": 1.0,
+  "bell_measurement": {
+    "m1": 1,
+    "m2": 0,
+    "bits": "10"
+  },
+  "pauli_correction": {
+    "gate": "Z",
+    "label": "Pauli-Z",
+    "operations": ["Z"]
+  },
+  "verification": {
+    "bit": 0,
+    "passed": true
+  },
+  "latency_ms": 78.373
+}
+```
+## Trial-Level Teleportation Results
+
+The dashboard now displays individual teleportation trials rather than only an aggregate result.
+
+Each trial contains:
+
+Trial number
+Bell measurement bits
+Pauli correction
+Verification output
+PASS / FAIL status
+
+The dashboard initially displays the first three trials and provides a View More control when additional trials are available. The control can be used to expand the complete trial history and then collapse it using View Less.
+
+## Teleportation Protocol Visualization
+
+The dashboard now visualizes the complete teleportation sequence:
+``` bash
+01 Prepare
+      ↓
+02 Entangle
+      ↓
+03 Bell Measurement
+      ↓
+04 Pauli Correction
+      ↓
+05 Verification
+```
+The interface also exposes the actual Qiskit-generated telemetry for the teleportation process, including:
+
+Bell measurement
+Pauli correction
+Verification
+Teleportation success rate
+
+This allows the user to inspect the underlying quantum simulation rather than seeing only the final attack verdict.
+
+## Attack + Teleportation Integration
+
+Teleportation data is now integrated into the attack simulation workflow.
+
+When an attack simulation produces teleportation data, the frontend displays the corresponding teleportation measurements alongside the QDS security result.
+
+The supported attack types remain:
+```bash
+Forgery
+Impersonation
+Replay
+Channel Manipulation
+```
+Each attack continues to use its corresponding detection mechanism rather than a single generic detector.
+
+## Channel Manipulation
+
+Channel Manipulation is now fully integrated as one of the four attack options in the dashboard and API.
+
+The API accepts:
+```bash
+{
+  "attack_type": "channel_manipulation"
+}
+```
+The frontend also provides a dedicated Channel Manipulation state in the QDS flow visualization.
+
+## Clean Teleportation Simulation
+
+A standalone teleportation simulation has also been integrated into the backend/frontend workflow.
+
+The teleportation endpoint is:
+``` bash
+POST /simulate/teleportation
+```
+This endpoint runs the Qiskit teleportation circuit and returns the teleportation-specific telemetry, including trial results and verification information.
+
+## Updated API Integration
+
+The API layer now supports the teleportation simulation in addition to the existing QDS clean and attack simulations.
+
+Current simulation routes include:
+```bash
+POST /simulate/clean
+POST /simulate/attack
+POST /simulate/teleportation
+```
+The attack endpoint continues to accept:
+```
+forgery
+impersonation
+replay
+channel_manipulation
+```
+The frontend API layer has been updated to consume the teleportation response and expose the returned data to the dashboard.
+
+Frontend Teleportation Data Model
+
+The frontend now maintains dedicated teleportation state so that the quantum simulation results can be displayed independently from the normal attack result.
+
+The teleportation data includes:
+```bash
+protocol
+shots
+teleportation_success_rate
+bell_measurement
+pauli_correction
+verification
+trials
+latency_ms
+```
+The frontend also maintains the visibility state of the trial table so users can switch between the abbreviated and complete trial history.
+
+## Updated Project Structure
+
+The teleportation implementation is now represented by a dedicated backend module:
+``` bash
+backend/
+├── main.py
+├── teleportation.py
+├── signatures.py
+├── attacks.py
+├── detection.py
+└── requirements.txt
+```
+teleportation.py contains the Qiskit teleportation simulation and produces the teleportation telemetry consumed by the API and frontend.
+
+A corresponding teleportation test module is also included:
+```bash
+backend/
+└── test_teleportation.py
+```
